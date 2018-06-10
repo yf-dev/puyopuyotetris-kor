@@ -19,6 +19,10 @@ def get_characters(path, entry_wrapper_index=0):
     with open(path, "r", encoding="utf-8") as json_f:
         obj = json.load(json_f)
         character_set = set()
+        for (
+            c
+        ) in "1234567890-:;,.&()!/abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ":
+            character_set.add(c)
         for entry in obj["Entries"][entry_wrapper_index]:
             entry = re.sub(NONE_CHARACTER_REGEX, "", entry, re.M)
             for character in entry:
@@ -46,7 +50,7 @@ def generate_entries(fif, characters, font, font_size, color, output):
         pos_width = 0
         pos_height = 0
 
-        image = Image.new("RGB", (fif.width, fif.width), (0, 0, 0))
+        image = Image.new("RGB", (fif.width, fif.height), (0, 0, 0))
         alpha = Image.new("L", image.size, "black")
         imtext = Image.new("L", image.size, 0)
         drtext = ImageDraw.Draw(imtext)
@@ -61,11 +65,11 @@ def generate_entries(fif, characters, font, font_size, color, output):
             drtext.text(pos, character, font=font, fill="white")
 
             if character.isspace():
-                new_entries[character] = FifEntry(0, 11, 1)
+                new_entries[character] = FifEntry(0, 10, 1)
             if character.isalpha():
-                new_entries[character] = FifEntry(0, 1, glyph_size[0])
+                new_entries[character] = FifEntry(0, 0, glyph_size[0])
             else:
-                new_entries[character] = FifEntry(0, 3, glyph_size[0])
+                new_entries[character] = FifEntry(0, 2, glyph_size[0])
 
             character_index += 1
             texture_character_count += 1
@@ -80,7 +84,7 @@ def generate_entries(fif, characters, font, font_size, color, output):
         immask = Image.eval(imtext, lambda p: 255 * (int(p != 0)))
         image = Image.composite(solidcolor, image, immask)
         image.putalpha(alpha)
-        image.save(output + f"_{texture_index:02}.png", "PNG")
+        image.save(output + f"_{texture_index:02}.dds.png", "PNG")
 
     return new_entries
 
@@ -94,8 +98,8 @@ if __name__ == "__main__":
     parser.add_argument("name", help="File Name without extension of generated data")
     parser.add_argument(
         "-f",
-        "--fif",
-        help="File path of original fif json to copy properties",
+        "--fif_json",
+        help="File path of fif json to copy properties",
         required=True,
     )
     parser.add_argument(
@@ -112,7 +116,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     output = path_join(args.output_dir, args.name)
-    fif = FifFile.load(args.fif)
+    with open(args.fif_json, "r", encoding="utf-8") as json_f:
+        obj = json.load(json_f, object_pairs_hook=OrderedDict)
+        fif = FifFile.import_obj(obj)
     font_size = px_to_pt(fif.character_height) - 2
     font = ImageFont.truetype(args.font, size=font_size)
     characters = get_characters(args.text_json, args.index)

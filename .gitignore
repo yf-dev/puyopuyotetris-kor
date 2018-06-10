@@ -2,3 +2,5 @@
 __pycache__
 data/
 .DS_Store
+lib/*
+!lib/.gitkeep
