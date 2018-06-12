@@ -7,6 +7,7 @@ from subprocess import Popen, PIPE
 from tempfile import gettempdir
 from shutil import rmtree, copyfile
 import re
+import sys
 
 TEMP_DIR_PAR = path_join(gettempdir(), "puyopuyotetris-tempdata")
 TEMP_DIR = path_join(TEMP_DIR_PAR, "tmp")
@@ -44,7 +45,10 @@ def update_fif_data(
 ):
     index = int(basename(fif_path)[len(f"{base}English_") :][:2], base=10)
     fif_base = fif_path[: -len(".fif.json")]
-    fif_command = f"python generate_font_data.py {text_json_file} {narc_tmp_path} {fif_base} -f {fif_path} -g {font} -i {index}"
+    if getattr(sys, "frozen", False):
+        fif_command = f"generate_font_data.exe {text_json_file} {narc_tmp_path} {fif_base} -f {fif_path} -g {font} -i {index}"
+    else:
+        fif_command = f"python generate_font_data.py {text_json_file} {narc_tmp_path} {fif_base} -f {fif_path} -g {font} -i {index}"
     print(f"[-] Generate fif file and font images from {fif_path}...")
     process = Popen(fif_command, stdout=PIPE, stderr=PIPE)
     print_process(process)
@@ -57,7 +61,7 @@ def update_fif_data(
         remove(dds)
 
     pngs = glob.glob(
-        path_join(narc_tmp_path, "**", f"{fif_base}_[0-9][0-9].png"), recursive=True
+        path_join(narc_tmp_path, "**", f"{fif_base}_[0-9][0-9].dds.png"), recursive=True
     )
     for png in pngs:
         convert_png_to_dds(png, imagemagick_convert_path)
@@ -75,6 +79,7 @@ def update_mtx_data(src_path, dst_path, text_json_file, mtx_to_json_path):
         stderr=PIPE,
     )
     print_process(process)
+
 
 def generate_narc(
     src_path, dst_path, original_path, ouput_narc_dir, narchive_path, is_use_tmp=False
@@ -159,49 +164,49 @@ if __name__ == "__main__":
 
     # process font data
 
-    # text_json_files = glob.glob(
-    #     path_join(args.font_data, "**", "*English.json"), recursive=True
-    # )
-    # for text_json_file in text_json_files:
-    #     base = basename(text_json_file)[: -len("English.json")]
-    #     text_json_file_par = abspath(path_join(text_json_file, pardir))
-    #     for extracted_narc in listdir(text_json_file_par):
-    #         m = re.compile(f"{base}(_F[0-9])?English.narc_extracted")
-    #         if not m.search(extracted_narc):
-    #             continue
-    #         extracted_narc = abspath(path_join(text_json_file_par, extracted_narc))
-    #         tmp_path = path_join(extracted_narc, "tmp")
-    #         fifs = glob.glob(
-    #             path_join(tmp_path, "**", f"{base}English_[0-9][0-9]_*.fif.json"),
-    #             recursive=True,
-    #         )
-    #         for fif_path in fifs:
-    #             update_fif_data(
-    #                 fif_path,
-    #                 base,
-    #                 text_json_file,
-    #                 tmp_path,
-    #                 args.font,
-    #                 args.imagemagick_convert_path,
-    #             )
-    #         generate_narc(
-    #             args.font_data,
-    #             args.output_path,
-    #             tmp_path[len(abspath(args.font_data)) + 1 :],
-    #             abspath(path_join(tmp_path, pardir))[len(abspath(args.font_data)) + 1:],
-    #             args.narchive_path,
-    #             is_use_tmp=True,
-    #         )
+    text_json_files = glob.glob(
+        path_join(args.font_data, "**", "*English.json"), recursive=True
+    )
+    for text_json_file in text_json_files:
+        base = basename(text_json_file)[: -len("English.json")]
+        text_json_file_par = abspath(path_join(text_json_file, pardir))
+        for extracted_narc in listdir(text_json_file_par):
+            m = re.compile(f"{base}(_F[0-9])?English.narc_extracted")
+            if not m.search(extracted_narc):
+                continue
+            extracted_narc = abspath(path_join(text_json_file_par, extracted_narc))
+            tmp_path = path_join(extracted_narc, "tmp")
+            fifs = glob.glob(
+                path_join(tmp_path, "**", f"{base}English_[0-9][0-9]_*.fif.json"),
+                recursive=True,
+            )
+            for fif_path in fifs:
+                update_fif_data(
+                    fif_path,
+                    base,
+                    text_json_file,
+                    tmp_path,
+                    args.font,
+                    args.imagemagick_convert_path,
+                )
+            generate_narc(
+                args.font_data,
+                args.output_path,
+                tmp_path[len(abspath(args.font_data)) + 1 :],
+                abspath(path_join(tmp_path, pardir))[len(abspath(args.font_data)) + 1:],
+                args.narchive_path,
+                is_use_tmp=True,
+            )
 
-    #     update_mtx_data(
-    #         args.font_data, args.output_path, text_json_file, args.mtx_to_json_path
-    #     )
+        update_mtx_data(
+            args.font_data, args.output_path, text_json_file, args.mtx_to_json_path
+        )
 
     # process image data
 
-    # png_files = glob.glob(path_join(args.image_data, "**", "*.png"), recursive=True)
-    # for png_file in png_files:
-    #     convert_png_to_dds(png_file, args.imagemagick_convert_path)
+    png_files = glob.glob(path_join(args.image_data, "**", "*.png"), recursive=True)
+    for png_file in png_files:
+        convert_png_to_dds(png_file, args.imagemagick_convert_path)
 
     extracted_tppks = glob.glob(
         path_join(args.image_data, "**", "*_tppk_extracted"), recursive=True

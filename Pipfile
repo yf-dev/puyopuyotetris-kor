@@ -1,6 +1,6 @@
 [[source]]
-url = "https://pypi.org/simple"
-verify_ssl = true
+url = "http://mirror.kakao.com/pypi/simple"
+verify_ssl = false
 name = "pypi"
 
 [packages]
@@ -8,6 +8,7 @@ pillow = ">=5.1.0"
 
 [dev-packages]
 black = "*"
+pyinstaller = "*"
 
 [requires]
 python_version = "3.6"
