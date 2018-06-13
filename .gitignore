@@ -7,5 +7,6 @@ lib/*
 !lib/.gitkeep
 *.spec
 build/
-dist/*
-!dist/*.bat
+dist/*.exe
+dist/data/fonts/*
+!dist/data/fonts/.gitkeep
