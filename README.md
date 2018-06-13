@@ -2,6 +2,8 @@
 
 [뿌요뿌요 테트리스(Steam, PC)](https://store.steampowered.com/app/546050/Puyo_PuyoTetris/)의 한국어 패치 파일 생성을 위한 스크립트입니다.
 
+@nickworonekin 님께서 작성한 많은 스크립트에 도움을 받았습니다. 감사합니다.
+
 ## 사용법
 
 ### 1. 사전 준비사항
@@ -102,5 +104,3 @@
 `ppt-kor-v0.0.1\data\generated` 디렉터리에 생성된 `data_steam` 디렉터리를 뿌요뿌요 테트리스가 설치된 디렉터리 (일반적으로 `C:\Program Files (x86)\Steam\steamapps\common\PuyoPuyoTetris`)의 `data_steam` 디렉터리에 덮어씌우면 패치가 적용됩니다.
 
 패치 파일을 적용하시기 전에 원본 data_steam 디렉터리를 백업하시길 권장합니다.
-
-
