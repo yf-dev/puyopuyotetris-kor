@@ -1,10 +1,9 @@
 @echo off
-rem If you change this file, you should change same file on dist directory.
-python convert_text_to_csv.py ^
+.\convert_text_to_csv.exe ^
 	--use_suggestion json ^
 	"data\font_data data\font_data\data_steam" ^
 	"data\pptko-translation - data.csv"
-python generate_data.py ^
+.\generate_data.exe ^
 	-a "data\font_data" ^
 	-b "data\image_data" ^
 	-o "data\generated" ^

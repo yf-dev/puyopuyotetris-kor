@@ -1,6 +1,5 @@
 @echo off
-rem If you change this file, you should change same file on dist directory.
-python convert_original_data.py ^
+.\convert_original_data.exe ^
 	-m "lib\PuyoTextEditor-1.0.1\MtxToJson.exe" ^
 	-n "lib\Narchive-1.0.1\Narchive.exe" ^
 	-t "lib\TppkTool-1.0.1\TppkTool.exe" ^

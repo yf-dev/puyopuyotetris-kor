@@ -7,4 +7,5 @@ lib/*
 !lib/.gitkeep
 *.spec
 build/
-dist/
+dist/*
+!dist/*.bat

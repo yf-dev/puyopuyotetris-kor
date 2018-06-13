@@ -33,7 +33,7 @@ if __name__ == "__main__":
     parser.add_argument("--skip_dds", help="Skip dds converting", action="store_true")
     args = parser.parse_args()
 
-    if not skip_narc:
+    if not args.skip_narc:
         narc_files = glob.glob(path_join(args.path, "**", "*.narc"), recursive=True)
         for narc_file in narc_files:
             print(f"[-] Extracting {narc_file} ...")
@@ -44,7 +44,7 @@ if __name__ == "__main__":
             )
             print_process(process, CONSOLE_ENCODING)
 
-    if not skip_mtx:
+    if not args.skip_mtx:
         mtx_files = glob.glob(path_join(args.path, "**", "*.mtx"), recursive=True)
         for mtx_file in mtx_files:
             print(f"[-] Converting {mtx_file} to json")
@@ -53,7 +53,7 @@ if __name__ == "__main__":
             )
             print_process(process, CONSOLE_ENCODING)
 
-    if not skip_fif:
+    if not args.skip_fif:
         fif_files = glob.glob(path_join(args.path, "**", "*.fif"), recursive=True)
         for fif_file in fif_files:
             print(f"[-] Converting {fif_file} to json")
@@ -67,7 +67,7 @@ if __name__ == "__main__":
         path_join(args.path, "**", "*"), recursive=True
     )  # tppk, dds에서 사용
 
-    if not skip_tppk:
+    if not args.skip_tppk:
         # TPPK 파일은 확장자가 없을 수 있음. magic code를 보고 TPPK파일을 확인
         all_files = glob.glob(path_join(args.path, "**", "*"), recursive=True)
         for a_file in all_files:
@@ -86,7 +86,7 @@ if __name__ == "__main__":
                 )
                 print_process(process, CONSOLE_ENCODING)
 
-    if not skip_dds:
+    if not args.skip_dds:
         dds_files = glob.glob(path_join(args.path, "**", "*.dds"), recursive=True)
         for dds_file in dds_files:
             print(f"[-] Converting {dds_file} to png")
