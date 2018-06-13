@@ -8,5 +8,6 @@ lib/*
 *.spec
 build/
 dist/*.exe
+dist/*.csv
 dist/data/fonts/*
 !dist/data/fonts/.gitkeep
