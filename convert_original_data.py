@@ -97,7 +97,23 @@ if __name__ == "__main__":
             )
             print_process(process, CONSOLE_ENCODING)
 
-        # 확장자가 DDS가 아닌 파일들을 magic code를 보고 변환함
+        # 확장자가 DAT인 파일들을 magic code를 보고 변환함
+        dat_files = glob.glob(path_join(args.path, "**", "*.dat"), recursive=True)
+        for dat_file in dat_files:
+            with open(dat_file, "rb") as f:
+                magic_code = f.read(3)
+                if magic_code != b"DDS":
+                    continue
+                print(f"[-] Converting {dat_file} to png")
+                process = Popen(
+                    f"{args.imagemagick_convert_path} dds:{dat_file} {dat_file}.png",
+                    stdout=PIPE,
+                    stderr=PIPE,
+                )
+                print_process(process, CONSOLE_ENCODING)
+
+
+        # 확장자가 없는 파일들을 magic code를 보고 변환함
         for a_file in all_files:
             if isdir(a_file) or "." in basename(a_file):
                 continue
