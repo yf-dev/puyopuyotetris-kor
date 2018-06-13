@@ -45,3 +45,11 @@ def write_short(f, v, is_big_endian=False):
 
 def write_int(f, v, is_big_endian=False):
     return f.write(pack(struct_prefix(is_big_endian) + "i", v))
+
+
+def print_process(process, encoding):
+    stdout, stderr = process.communicate()
+    if stdout:
+        print(stdout.decode(encoding))
+    if stderr:
+        print(stderr.decode(encoding))

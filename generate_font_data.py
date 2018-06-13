@@ -41,7 +41,7 @@ def update_fif(fif, characters):
     fif.texture_count = ceil(fif.entry_count / fif.characters_per_texture)
 
 
-def generate_entries(fif, characters, font, font_size, color, output):
+def generate_entries(fif, characters, font, font_size, color, font_top_margin, output):
     character_index = 0
     new_entries = OrderedDict()
 
@@ -61,7 +61,10 @@ def generate_entries(fif, characters, font, font_size, color, output):
         ):
             character = characters[character_index]
             glyph_size = font.getsize(character)
-            pos = (pos_width + 1, round(pos_height - font_size * 0.1 + 1))
+            pos = (
+                pos_width + 1,
+                round(pos_height - font_size * 0.1 + 1) + font_top_margin,
+            )
             drtext.text(pos, character, font=font, fill="white")
 
             if character.isspace():
@@ -113,17 +116,25 @@ if __name__ == "__main__":
         type=int,
     )
     parser.add_argument("-c", "--color", help="Color of font image", default="#ffffff")
+    parser.add_argument(
+        "--font_top_margin", help="Top margin for font", default=0, type=int
+    )
+    parser.add_argument(
+        "--font_rel_size", help="Font relative size factor", default=0, type=int
+    )
     args = parser.parse_args()
 
     output = path_join(args.output_dir, args.name)
     with open(args.fif_json, "r", encoding="utf-8") as json_f:
         obj = json.load(json_f, object_pairs_hook=OrderedDict)
         fif = FifFile.import_obj(obj)
-    font_size = px_to_pt(fif.character_height) - 2
+    font_size = px_to_pt(fif.character_height) - 2 + args.font_rel_size
     font = ImageFont.truetype(args.font, size=font_size)
     characters = get_characters(args.text_json, args.index)
 
     update_fif(fif, characters)
-    new_entries = generate_entries(fif, characters, font, font_size, args.color, output)
+    new_entries = generate_entries(
+        fif, characters, font, font_size, args.color, args.font_top_margin, output
+    )
     fif.entries = new_entries
     fif.save(output + ".fif")

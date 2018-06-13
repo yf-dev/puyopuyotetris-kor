@@ -8,6 +8,10 @@ from tempfile import gettempdir
 from shutil import rmtree, copyfile
 import re
 import sys
+from locale import getdefaultlocale
+from app.utils.io import print_process
+
+CONSOLE_ENCODING = getdefaultlocale()[1]
 
 TEMP_DIR_PAR = path_join(gettempdir(), "puyopuyotetris-tempdata")
 TEMP_DIR = path_join(TEMP_DIR_PAR, "tmp")
@@ -15,14 +19,6 @@ TEMP_DIR = path_join(TEMP_DIR_PAR, "tmp")
 
 def mkdir_parent(file_path):
     makedirs(abspath(path_join(file_path, pardir)), exist_ok=True)
-
-
-def print_process(process):
-    stdout, stderr = process.communicate()
-    if stdout:
-        print(stdout.decode("utf-8"))
-    if stderr:
-        print(stderr.decode("utf-8"))
 
 
 def convert_png_to_dds(png_path, imagemagick_convert_path, dds_path=None):
@@ -37,7 +33,7 @@ def convert_png_to_dds(png_path, imagemagick_convert_path, dds_path=None):
         stdout=PIPE,
         stderr=PIPE,
     )
-    print_process(process)
+    print_process(process, CONSOLE_ENCODING)
 
 
 def update_fif_data(
@@ -51,7 +47,7 @@ def update_fif_data(
         fif_command = f"python generate_font_data.py {text_json_file} {narc_tmp_path} {fif_base} -f {fif_path} -g {font} -i {index}"
     print(f"[-] Generate fif file and font images from {fif_path}...")
     process = Popen(fif_command, stdout=PIPE, stderr=PIPE)
-    print_process(process)
+    print_process(process, CONSOLE_ENCODING)
 
     ddss = glob.glob(
         path_join(narc_tmp_path, "**", f"{fif_base}_[0-9][0-9].dds"), recursive=True
@@ -78,7 +74,7 @@ def update_mtx_data(src_path, dst_path, text_json_file, mtx_to_json_path):
         stdout=PIPE,
         stderr=PIPE,
     )
-    print_process(process)
+    print_process(process, CONSOLE_ENCODING)
 
 
 def generate_narc(
@@ -105,7 +101,7 @@ def generate_narc(
     mkdir_parent(ouput_narc_dir)
     cmd = f'{narchive_path} create "{ouput_narc_dir}" "{parent_dir}"'
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
-    print_process(process)
+    print_process(process, CONSOLE_ENCODING)
     rmtree(TEMP_DIR)
 
 
@@ -122,7 +118,7 @@ def generate_tppk(original_path, tppk_tool_path):
         stdout=PIPE,
         stderr=PIPE,
     )
-    print_process(process)
+    print_process(process, CONSOLE_ENCODING)
     rmtree(TEMP_DIR)
 
 
@@ -193,7 +189,9 @@ if __name__ == "__main__":
                 args.font_data,
                 args.output_path,
                 tmp_path[len(abspath(args.font_data)) + 1 :],
-                abspath(path_join(tmp_path, pardir))[len(abspath(args.font_data)) + 1:],
+                abspath(path_join(tmp_path, pardir))[
+                    len(abspath(args.font_data)) + 1 :
+                ],
                 args.narchive_path,
                 is_use_tmp=True,
             )
