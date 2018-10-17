@@ -6,8 +6,8 @@ __pycache__
 data/*.csv
 data/fonts/*
 !data/fonts/.gitkeep
+data/build/*
 data/generated/*
-!data/generated/.gitkeep
 data/steam_data/*
 !data/steam_data/.gitkeep
 data/switch_romfs/*
