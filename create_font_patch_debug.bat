@@ -5,6 +5,7 @@ python convert_csv_to_mtx_json_r.py ^
 	-l "kr" ^
 	-p "English" ^
 	--offset_64bit ^
+	--debug ^
 	> logs\cfp_convert_csv_to_mtx_json_r.txt
 
 python convert_json_to_mtx_r.py ^

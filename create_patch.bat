@@ -1,5 +1,4 @@
 @echo off
-rem If you change this file, you should change same file on dist directory.
 python convert_text_to_csv.py ^
 	--use_suggestion ^
 	json ^

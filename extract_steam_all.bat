@@ -1,5 +1,4 @@
 @echo off
-rem If you change this file, you should change same file on dist directory.
 python extract_narc_r.py ^
 	-d "data\steam_data" ^
 	-n "lib\Narchive-1.0.1\Narchive.exe" ^

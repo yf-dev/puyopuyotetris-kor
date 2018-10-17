@@ -1,5 +1,4 @@
 @echo off
-rem If you change this file, you should change same file on dist directory.
 python extract_tzip_r.py ^
 	-d "data\switch_romfs" ^
 	-q "lib\quickbms\quickbms.exe" ^
