@@ -51,12 +51,20 @@ def load_data_from_csv(path, debug=False):
                 data[json_path] = {}
             if entry_wrapper_index not in data[json_path]:
                 data[json_path][entry_wrapper_index] = {}
-            data[json_path][entry_wrapper_index][entry_index] = {
-                "en": f"[{index}]{en}",
-                "jp": f"[{index}]{jp}",
-                "kr": f"[{index}]{kr}",
-                "unknown": f"[{index}]{unknown}",
-            }
+            if debug:
+                data[json_path][entry_wrapper_index][entry_index] = {
+                    "en": f"[{index}]{en}",
+                    "jp": f"[{index}]{jp}",
+                    "kr": f"[{index}]{kr}",
+                    "unknown": f"[{index}]{unknown}",
+                }
+            else:
+                data[json_path][entry_wrapper_index][entry_index] = {
+                    "en": f"{en}",
+                    "jp": f"{jp}",
+                    "kr": f"{kr}",
+                    "unknown": f"{unknown}",
+                }
 
     # validation and convert dict to list
 
