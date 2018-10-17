@@ -78,7 +78,7 @@ def update_mtx_data(src_path, dst_path, text_json_file, mtx_to_json_path):
 
 
 def generate_narc(
-    src_path, dst_path, original_path, ouput_narc_dir, narchive_path, is_use_tmp=False
+    src_path, dst_path, original_path, output_narc_dir, narchive_path, is_use_tmp=False
 ):
     if is_use_tmp:
         parent_dir = TEMP_DIR_PAR
@@ -97,9 +97,9 @@ def generate_narc(
             path_join(path_join(src_path, original_path), item),
             path_join(TEMP_DIR, item),
         )
-    ouput_narc_dir = path_join(dst_path, ouput_narc_dir[: -len("_extracted")])
-    mkdir_parent(ouput_narc_dir)
-    cmd = f'{narchive_path} create "{ouput_narc_dir}" "{parent_dir}"'
+    output_narc_dir = path_join(dst_path, output_narc_dir[: -len("_extracted")])
+    mkdir_parent(output_narc_dir)
+    cmd = f'{narchive_path} create "{output_narc_dir}" "{parent_dir}"'
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
     print_process(process, CONSOLE_ENCODING)
     rmtree(TEMP_DIR)
@@ -112,9 +112,9 @@ def generate_tppk(original_path, tppk_tool_path):
         if item.endswith(".png"):
             continue
         copyfile(path_join(original_path, item), path_join(TEMP_DIR, item))
-    ouput_tppk_dir = original_path[: -len("_tppk_extracted")]
+    output_tppk_dir = original_path[: -len("_tppk_extracted")]
     process = Popen(
-        f'{tppk_tool_path} create "{ouput_tppk_dir}" "{TEMP_DIR}"',
+        f'{tppk_tool_path} create "{output_tppk_dir}" "{TEMP_DIR}"',
         stdout=PIPE,
         stderr=PIPE,
     )

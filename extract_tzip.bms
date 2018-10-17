@@ -1,0 +1,7 @@
+comtype COMP_UNZIP_DYNAMIC
+get ZSIZE long
+get NAME basename
+string NAME += ".unziped"
+get ASIZE asize
+math ASIZE - 4
+clog NAME 4 ASIZE ZSIZE

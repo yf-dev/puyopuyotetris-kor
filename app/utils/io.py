@@ -50,6 +50,6 @@ def write_int(f, v, is_big_endian=False):
 def print_process(process, encoding):
     stdout, stderr = process.communicate()
     if stdout:
-        print(stdout.decode(encoding))
+        print(stdout.decode(encoding, "backslashreplace"))
     if stderr:
-        print(stderr.decode(encoding))
+        print(stderr.decode(encoding,  "backslashreplace"))
