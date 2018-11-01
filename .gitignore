@@ -15,3 +15,5 @@ data/switch_romfs/*
 lib/*
 !lib/.gitkeep
 logs/*
+data/build-images/
+data/images/
