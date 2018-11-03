@@ -69,8 +69,14 @@ def generate_entries(fif, characters, font, font_size, color, font_top_margin, o
 
             if character.isspace():
                 new_entries[character] = FifEntry(0, 10, 1)
-            if character.isalpha():
+            elif character.isalpha():
                 new_entries[character] = FifEntry(0, 0, glyph_size[0])
+            elif character.isdigit():
+                new_entries[character] = FifEntry(0, 0, (int)(glyph_size[0] * 0.975))
+            elif character == ':': # fine tune for time seperator
+                new_entries[character] = FifEntry(0, 0, (int)(glyph_size[0] * 0.85))
+            elif character == '/': # fine tune for date seperator
+                new_entries[character] = FifEntry(0, 0, (int)(glyph_size[0] * 0.9))
             else:
                 new_entries[character] = FifEntry(0, 2, glyph_size[0])
 

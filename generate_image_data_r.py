@@ -109,6 +109,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
+    png_files = glob.glob(path_join(args.dir_path, "**", "*.png"), recursive=True)
+    for png_file in png_files:
+        convert_png_to_dds(png_file, args.imagemagick_convert_path)
+
     all_files = glob.glob(path_join(args.dir_path, "**", "*"), recursive=True)
     for f in all_files:
         if "_tppk_extracted" in f or "_narc_extracted" in f:
@@ -127,11 +131,6 @@ if __name__ == "__main__":
             print(dest_path)
             makedirs(dirname(dest_path), exist_ok=True)
             copyfile(f, dest_path)
-
-
-    png_files = glob.glob(path_join(args.dir_path, "**", "*.png"), recursive=True)
-    for png_file in png_files:
-        convert_png_to_dds(png_file, args.imagemagick_convert_path)
 
     extracted_tppks = glob.glob(
         path_join(args.dir_path, "**", "*_tppk_extracted"), recursive=True

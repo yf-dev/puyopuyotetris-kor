@@ -24,7 +24,7 @@ def save_to_dir(path, data, language, postfix, offset_64bit=False):
             f.write(json.dumps(json_data, ensure_ascii=False, indent=True))
 
 
-def load_data_from_csv(path, debug=False):
+def load_data_from_csv(path, language, debug=False):
     data = OrderedDict()
 
     with open(path, newline="", encoding="utf-8") as f:
@@ -38,12 +38,45 @@ def load_data_from_csv(path, debug=False):
                 continue
             key = row[0]
             en = row[1].replace("\\n", "\n")
-            jp = row[2].replace("\\n", "\n")
-            kr = row[3].replace("\\n", "\n")
-            unknown = row[4].replace("\\n", "\n")
+            kr = row[2].replace("\\n", "\n")
+            kr_s = row[3].replace("\\n", "\n")
+            jp = row[4].replace("\\n", "\n")
+
+            if debug:
+                el =  {
+                    "en": f"[{index}]{en}",
+                    "kr": f"[{index}]{kr}",
+                    "kr_s": f"[{index}]{kr_s}",
+                    "jp": f"[{index}]{jp}",
+                }
+            else:
+                el =  {
+                    "en": f"{en}",
+                    "kr": f"{kr}",
+                    "kr_s": f"{kr_s}",
+                    "jp": f"{jp}",
+                }
+
+            if not el["en"] and not el[language] :
+                print(
+                    f"[W] It is not have any english(base) and {language} text. skipped:"
+                    f" {key}"
+                )
+                continue
+            
+            if not el["en"] and el[language]:
+                print(
+                    f"[W] It is not have any english(base) text but {language} is defined:"
+                    f" {key}"
+                )
+            if el["en"] and not el[language]:
+                raise Exception(
+                    f"[!] It is not have any {language} text:"
+                    f" {key}"
+                )
 
             skey = key.split("|")
-            json_path = skey[0][1:]
+            json_path = skey[0]
             entry_wrapper_index = skey[1]
             entry_index = skey[2]
 
@@ -54,16 +87,16 @@ def load_data_from_csv(path, debug=False):
             if debug:
                 data[json_path][entry_wrapper_index][entry_index] = {
                     "en": f"[{index}]{en}",
-                    "jp": f"[{index}]{jp}",
                     "kr": f"[{index}]{kr}",
-                    "unknown": f"[{index}]{unknown}",
+                    "kr_s": f"[{index}]{kr_s}",
+                    "jp": f"[{index}]{jp}",
                 }
             else:
                 data[json_path][entry_wrapper_index][entry_index] = {
                     "en": f"{en}",
-                    "jp": f"{jp}",
                     "kr": f"{kr}",
-                    "unknown": f"{unknown}",
+                    "kr_s": f"{kr_s}",
+                    "jp": f"{jp}",
                 }
 
     # validation and convert dict to list
@@ -87,6 +120,20 @@ def load_data_from_csv(path, debug=False):
                         f"entry_index {entry_index} is not defined in"
                         f" {json_path} on entry_wrapper_index {entry_wrapper_index}"
                     )
+                
+                el = data[json_path][entry_wrapper_index][entry_index]
+                
+                if not el["en"] and el[language]:
+                    print(
+                        f"[W] It is not have any english(base) text but {language} is defined:"
+                        f" {json_path}|{entry_wrapper_index}|{entry_index}"
+                    )
+                if el["en"] and not el[language]:
+                    raise Exception(
+                        f"[!] It is not have any {language} text:"
+                        f" {json_path}|{entry_wrapper_index}|{entry_index}"
+                    )
+
                 ei_list.append(data[json_path][entry_wrapper_index][entry_index])
             ewi_list.append(ei_list)
         data[json_path] = ewi_list
@@ -136,6 +183,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    loaded_data = load_data_from_csv(args.csv, args.debug)
+    loaded_data = load_data_from_csv(args.csv, args.language, args.debug)
     save_to_dir(args.dir_path, loaded_data, args.language, args.postfix,
                 args.offset_64bit)
