@@ -17,3 +17,4 @@ lib/*
 logs/*
 data/build-images/
 data/images/
+data/build-merged/
