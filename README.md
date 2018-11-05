@@ -1,5 +1,8 @@
 # 뿌요뿌요 테트리스 Steam PC 한국어 패치
 
+[![GitHub](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/yf-dev/puyopuyotetris-kor/blob/master/LICENSE)
+[![GitHub tag (latest SemVer)](https://img.shields.io/github/tag/yf-dev/puyopuyotetris-kor.svg)](https://github.com/yf-dev/puyopuyotetris-kor/releases/latest)
+
 ![뿌요뿌요 테트리스 인트로 스크린샷](./screenshots/20181105221920_1.jpg)
 
 [뿌요뿌요 테트리스(Steam, PC)](https://store.steampowered.com/app/546050/Puyo_PuyoTetris/)의 한국어 패치 파일 생성을 위한 스크립트입니다.
@@ -38,6 +41,7 @@
 - 본 스크립트를 실행하기 위해서는 [닷넷 프레임워크](https://www.microsoft.com/net/download/dotnet-framework-runtime) 4.6 이상이 필요합니다.
 - 본 스크립트는 패치 파일을 원본 게임 데이터를 통해 생성합니다. 생성 작업을 위해 많은 디스크 용량이 필요할 수 있습니다.
 - 본 스크립트를 처음부터 정상적으로 구동하기 위해서는 Nintendo Switch로 발매된 `뿌요뿌요 테트리스 S`의 데이터가 필요합니다.
+- 텍스트 패치 이외의 이미지 패치는 본 프로젝트로 작업이 가능하지만, 패치를 위해 한국어로 수정한 이미지 데이터는 저작권 문제로 제공하지 않습니다.
 
 
 ### 2. 필요한 파일 다운로드 및 빌드 환경 준비
@@ -161,4 +165,8 @@ pipenv shell
 
 `ppt-kor\data\build` 디렉터리와 `ppt-kor\data\build-images`에 생성된 디렉터리들을 뿌요뿌요 테트리스가 설치된 디렉터리 (일반적으로 `C:\Program Files (x86)\Steam\steamapps\common\PuyoPuyoTetris`)의 `data_steam\data` 디렉터리 내부에 덮어씌우면 패치가 적용됩니다.
 
-패치 파일을 적용하시기 전에 원본 data_steam 디렉터리를 백업하시길 권장합니다.
+패치 파일을 적용하시기 전에 원본 `data_steam` 디렉터리를 백업하시길 권장합니다.
+
+## License
+
+본 프로젝트는 [MIT License](./LICENSE) 하에 제공됩니다.
