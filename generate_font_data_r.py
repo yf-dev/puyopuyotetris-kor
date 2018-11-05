@@ -2,7 +2,7 @@ import argparse
 import glob
 from os.path import join as path_join
 from os.path import abspath, basename, isfile
-from os import makedirs, pardir, remove, listdir
+from os import makedirs, pardir, remove, listdir, sep
 from subprocess import Popen, PIPE
 from tempfile import gettempdir
 from shutil import rmtree, copyfile
@@ -41,7 +41,12 @@ def update_fif_data(
 ):
     index = int(basename(fif_path)[len(f"{base}English_") :][:2], base=10)
     fif_base = fif_path[: -len(".fif.json")]
-    fif_command = f"python generate_font_data.py {text_json_file} {narc_tmp_path} {fif_base} -f {fif_path} -g {font} -i {index}"
+    font_rel_size = 0
+    font_top_margin = 0
+    if 'adv_menu' in abspath(fif_path).split(sep)[-1]:
+        font_rel_size = -5
+        font_top_margin = 4
+    fif_command = f"python generate_font_data.py {text_json_file} {narc_tmp_path} {fif_base} -f {fif_path} -g {font} -i {index} --font_rel_size {font_rel_size} --font_top_margin {font_top_margin}"
     print(f"[-] Generate fif file and font images from {fif_path}...")
     # print(fif_command)
     process = Popen(fif_command, stdout=PIPE, stderr=PIPE)
