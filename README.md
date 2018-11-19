@@ -11,13 +11,19 @@
 
 ## 패치 다운로드 및 적용방법
 
-1. 아래 패치 다운로드 구글 드라이브 링크에서 가장 최신의 `build-<날짜>.zip` 파일을 다운로드합니다.
+1. 아래 패치 다운로드 링크에서 가장 최신의 `build-<날짜>.zip` 파일을 다운로드합니다.
 2. 뿌요뿌요 테트리스가 설치된 디렉터리 (일반적으로 `C:\Program Files (x86)\Steam\steamapps\common\PuyoPuyoTetris`)로 이동합니다.
 3. `data_steam\data` 디렉터리에 `build-<날짜>.zip` 파일의 압축 내용을 풀어 덮어 씌웁니다.
 
-잘 모르겠으면, `C:\Program Files (x86)\Steam\steamapps\common\PuyoPuyoTetris\data_steam\data` 폴더에 압축 파일 내용을 덮어 씌우면 됩니다.
+잘 모르겠으면, `C:\Program Files (x86)\Steam\steamapps\common\PuyoPuyoTetris\data_steam\data` 폴더에 `build-<날짜>.zip` 압축 파일 내용을 덮어 씌우면 됩니다.
 
-[패치 다운로드 구글 드라이브 링크](https://drive.google.com/drive/folders/13zkCxlFOuVyH8WcmlotYg5sYVtiQQ9mV?usp=sharing)
+[![패치 다운로드 링크](./download_link.png)](https://drive.google.com/drive/folders/13zkCxlFOuVyH8WcmlotYg5sYVtiQQ9mV?usp=sharing)
+
+## 자주 묻는 질문
+
+- Q1. 텍스트 앞에 `[1024]` 같이 이상한 숫자가 붙어서 나와요.
+- A1. 패치 다운로드시 `build-<날짜>-debug.zip` 말고 `build-<날짜>.zip` 를 받아서 다시 패치하세요.
+<!-- -->
 
 ## 스크린샷
 
