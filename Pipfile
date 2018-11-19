@@ -10,4 +10,4 @@ pillow = ">=5.1.0"
 pylint = ">=2.1.1"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
