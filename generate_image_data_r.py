@@ -2,7 +2,7 @@ import argparse
 import glob
 from os.path import join as path_join
 from os.path import abspath, basename, isfile, dirname
-from os import makedirs, pardir, remove, listdir
+from os import makedirs, pardir, remove, listdir, urandom
 from subprocess import Popen, PIPE
 from tempfile import gettempdir
 from shutil import rmtree, copyfile
@@ -10,12 +10,13 @@ import re
 import sys
 from locale import getdefaultlocale
 from app.utils.io import print_process
+from multiprocessing import Pool
+from functools import partial
+from uuid import UUID
 
 CONSOLE_ENCODING = getdefaultlocale()[1]
 
 TEMP_DIR_PAR = path_join(gettempdir(), "puyopuyotetris-tempdata")
-TEMP_DIR = path_join(TEMP_DIR_PAR, "tmp")
-
 
 def mkdir_parent(file_path):
     makedirs(abspath(path_join(file_path, pardir)), exist_ok=True)
@@ -37,14 +38,12 @@ def convert_png_to_dds(png_path, imagemagick_convert_path, dds_path=None):
 
 
 def generate_narc(
-    src_path, dst_path, original_path, output_narc_dir, narchive_path, is_use_tmp=False
+    src_path, dst_path, original_path, output_narc_dir, narchive_path
 ):
-    if is_use_tmp:
-        parent_dir = TEMP_DIR_PAR
-    else:
-        parent_dir = TEMP_DIR
     print(f"[-] Generate narchive file from {original_path}...")
-    mkdir_parent(path_join(TEMP_DIR, "noname"))
+    temp_dir_par = path_join(TEMP_DIR_PAR, str(UUID(bytes=urandom(16), version=4)))
+    temp_dir = path_join(temp_dir_par, "tmp")
+    makedirs(abspath(temp_dir), exist_ok=True)
     for item in listdir(path_join(src_path, original_path)):
         if (
             item.endswith(".fif.json")
@@ -55,34 +54,38 @@ def generate_narc(
             continue
         copyfile(
             path_join(path_join(src_path, original_path), item),
-            path_join(TEMP_DIR, item),
+            path_join(temp_dir, item),
         )
     output_narc_dir = path_join(dst_path, output_narc_dir[: -len("_narc_extracted")])
     mkdir_parent(output_narc_dir)
-    cmd = f'{narchive_path} create "{output_narc_dir}" "{parent_dir}"'
+    cmd = f'{narchive_path} create "{output_narc_dir}" "{temp_dir_par}"'
     process = Popen(cmd, stdout=PIPE, stderr=PIPE)
     print_process(process, CONSOLE_ENCODING)
-    rmtree(TEMP_DIR)
+    rmtree(temp_dir_par)
 
 
 def generate_tppk(original_path, tppk_tool_path):
     print(f"[-] Generate tppk file from {original_path}...")
-    mkdir_parent(path_join(TEMP_DIR, "noname"))
+    temp_dir = path_join(TEMP_DIR_PAR, str(UUID(bytes=urandom(16), version=4)))
+    makedirs(abspath(temp_dir), exist_ok=True)
     for item in listdir(original_path):
         if item.endswith(".png"):
             continue
         elif item.endswith(".psd"):
             continue
-        copyfile(path_join(original_path, item), path_join(TEMP_DIR, item))
+        copyfile(path_join(original_path, item), path_join(temp_dir, item))
     output_tppk_dir = original_path[: -len("_tppk_extracted")]
     process = Popen(
-        f'{tppk_tool_path} create "{output_tppk_dir}" "{TEMP_DIR}"',
+        f'{tppk_tool_path} create "{output_tppk_dir}" "{temp_dir}"',
         stdout=PIPE,
         stderr=PIPE,
     )
     print_process(process, CONSOLE_ENCODING)
-    rmtree(TEMP_DIR)
+    rmtree(temp_dir)
 
+def process_generate_narc(extracted_narc, args):
+    p = extracted_narc[len(args.dir_path) + 1 :]
+    generate_narc(args.dir_path, args.output_path, p, p, args.narchive_path)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="generate dds, narc files")
@@ -110,8 +113,11 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     png_files = glob.glob(path_join(args.dir_path, "**", "*.png"), recursive=True)
-    for png_file in png_files:
-        convert_png_to_dds(png_file, args.imagemagick_convert_path)
+    with Pool(processes=8) as pool:
+        pool.map(partial(
+            convert_png_to_dds, 
+            imagemagick_convert_path=args.imagemagick_convert_path
+        ), png_files)
 
     all_files = glob.glob(path_join(args.dir_path, "**", "*"), recursive=True)
     for f in all_files:
@@ -135,12 +141,17 @@ if __name__ == "__main__":
     extracted_tppks = glob.glob(
         path_join(args.dir_path, "**", "*_tppk_extracted"), recursive=True
     )
-    for extracted_tppk in extracted_tppks:
-        generate_tppk(extracted_tppk, args.tppk_tool_path)
+    with Pool(processes=8) as pool:
+        pool.map(partial(
+            generate_tppk, 
+            tppk_tool_path=args.tppk_tool_path
+        ), extracted_tppks)
 
     extracted_narcs = glob.glob(
         path_join(args.dir_path, "**", "*_narc_extracted"), recursive=True
     )
-    for extracted_narc in extracted_narcs:
-        p = extracted_narc[len(args.dir_path) + 1 :]
-        generate_narc(args.dir_path, args.output_path, p, p, args.narchive_path)
+    with Pool(processes=8) as pool:
+        pool.map(partial(
+            process_generate_narc, 
+            args=args
+        ), extracted_narcs)

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1796be909e951e997fdc7c5e906b9a0689e439c12b092988476af2e3ec9a8599"
+            "sha256": "b5bb97aca5f3c0a4a918d2f6afcfe240fccfc7b9080aee93f840ac3c787a18d8"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -10,7 +10,7 @@
         "sources": [
             {
                 "name": "pypi",
-                "url": "https://pypi.python.org/simple",
+                "url": "http://mirror.kakao.com/pypi/simple",
                 "verify_ssl": false
             }
         ]
@@ -68,6 +68,19 @@
             ],
             "markers": "sys_platform == 'win32'",
             "version": "==0.4.0"
+        },
+        "freetype-py": {
+            "hashes": [
+                "sha256:23c9dcd9c1797507b0e083c18848d476c72128137ca485665d149ce231001069",
+                "sha256:6bca37436cf236d1dabcb3378ad4fd0275b1857aac90e7f2ed6ee2dca6c2b0b0",
+                "sha256:d3dfe653f0bfa009befe2b63e7043a9dbac2c7a0b81292b48c787301adc868ec",
+                "sha256:e93390054bc480e0684740f2f46236ea81d591d9c94c1a884e86cb0378c65b98",
+                "sha256:edfeba3fe9d9e68bdd3368a1fa9c772a474ba3420cda8169dca570868d20526c",
+                "sha256:ee441e568dc1fdbbe44bd4dc204de755fcbca47ff45426d66b05f93e78496131",
+                "sha256:fb0f169b68fd842fabbec52378cf55fba26a1d74ad3dfb4fb9de133fe9903b4a"
+            ],
+            "index": "pypi",
+            "version": "==2.0.0.post6"
         },
         "isort": {
             "hashes": [

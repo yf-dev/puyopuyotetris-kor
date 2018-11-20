@@ -5,6 +5,7 @@ from math import ceil
 from collections import OrderedDict
 from os.path import join as path_join
 from PIL import Image, ImageFont, ImageDraw, ImageChops
+from freetype import Face
 
 from app.models.fif import FifFile, FifEntry
 
@@ -41,7 +42,7 @@ def update_fif(fif, characters):
     fif.texture_count = ceil(fif.entry_count / fif.characters_per_texture)
 
 
-def generate_entries(fif, characters, font, font_size, color, font_top_margin, output):
+def generate_entries(fif, characters, font, font_face, alternative_font, font_size, color, font_top_margin, output):
     character_index = 0
     new_entries = OrderedDict()
 
@@ -60,12 +61,16 @@ def generate_entries(fif, characters, font, font_size, color, font_top_margin, o
             and character_index < len(characters)
         ):
             character = characters[character_index]
-            glyph_size = font.getsize(character)
+            if font_face.get_char_index(character) != 0:
+                using_font = font
+            else:
+                using_font = alternative_font
+            glyph_size = using_font.getsize(character)
             pos = (
                 pos_width + 1,
                 round(pos_height - font_size * 0.1 + 1) + font_top_margin,
             )
-            drtext.text(pos, character, font=font, fill="white")
+            drtext.text(pos, character, font=using_font, fill="white")
 
             if character.isspace():
                 new_entries[character] = FifEntry(0, 10, 1)
@@ -115,6 +120,11 @@ if __name__ == "__main__":
         "-g", "--font", help="Font file path to generate font image", required=True
     )
     parser.add_argument(
+        "-a", "--alternative_font",
+        help="Font file path to generate font image if current font cannot render the glyph",
+        required=True
+    )
+    parser.add_argument(
         "-i",
         "--index",
         help="Index of entry in text json (default 0)",
@@ -136,11 +146,13 @@ if __name__ == "__main__":
         fif = FifFile.import_obj(obj)
     font_size = px_to_pt(fif.character_height) - 2 + args.font_rel_size
     font = ImageFont.truetype(args.font, size=font_size)
+    font_face = Face(args.font)
+    alternative_font = ImageFont.truetype(args.alternative_font, size=font_size)
     characters = get_characters(args.text_json, args.index)
 
     update_fif(fif, characters)
     new_entries = generate_entries(
-        fif, characters, font, font_size, args.color, args.font_top_margin, output
+        fif, characters, font, font_face, alternative_font, font_size, args.color, args.font_top_margin, output
     )
     fif.entries = new_entries
     fif.save(output + ".fif")

@@ -24,6 +24,7 @@ python generate_font_data_r.py ^
 	-n "lib\Narchive-1.0.1\Narchive.exe" ^
 	-t "lib\TppkTool-1.0.1\TppkTool.exe" ^
 	-f "data\fonts\Binggrae-Bold.otf" ^
+	-a "data\fonts\BlueHighway-Bold.ttf" ^
 	| lib\wtee.exe logs\cfp_generate_font_data_r.txt
 
 python copy_mtx_r.py ^

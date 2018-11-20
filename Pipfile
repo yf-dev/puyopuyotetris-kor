@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 pillow = ">=5.1.0"
+freetype-py = "*"
 
 [dev-packages]
 pylint = ">=2.1.1"
