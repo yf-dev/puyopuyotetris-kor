@@ -17,7 +17,7 @@
 
 잘 모르겠으면, `C:\Program Files (x86)\Steam\steamapps\common\PuyoPuyoTetris\data_steam\data` 폴더에 `build-<날짜>.zip` 압축 파일 내용을 덮어 씌우면 됩니다.
 
-[![패치 다운로드 링크](./download_link.png)](https://drive.google.com/drive/folders/13zkCxlFOuVyH8WcmlotYg5sYVtiQQ9mV?usp=sharing)
+[![패치 다운로드 링크](./download_link.png)](https://drive.google.com/drive/folders/1c9Dh3m79d_8HRg6tLMiDx4zzu8h0J5fY)
 
 ## 자주 묻는 질문
 
